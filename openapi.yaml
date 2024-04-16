@@ -1,0 +1,194 @@
+openapi: 3.0.3
+info:
+  title: RethinkWildlife HAC API - Nodejs REST API Service
+  description: >-
+    This is the API specification for RethinkWildlife HAC Incident API written in Nodejs
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: http://localhost:8888
+tags:
+  - name: incidents
+    description: HAC incidents API
+paths:
+  /hac/incidents:
+    summary: List all incidents
+    get:
+      summary: Get all incidents
+      operationId: GetAllIncidents
+      tags:
+        - incidents
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KeyValue"
+    post:
+      summary: Insert a new incident
+      operationId: SetNewIncident
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid request body
+      tags:
+        - incidents
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeyValue"
+
+  /incident/{uuid}:
+    summary: Get an incident by UUID
+    get:
+      tags:
+        - incidents
+      summary: Get incident by UUID
+      operationId: GetIncidentByUUID
+      parameters:
+        - name: uuid
+          in: path
+          description: UUID of incident to return
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KeyValue"
+        "404":
+          description: UUID not found
+    delete:
+      tags:
+        - incidents
+      summary: Delete incident by UUID
+      description: Deletes a single incident based on the UUID supplied
+      operationId: DeleteIncidentByUUID
+      parameters:
+        - name: uuid
+          in: path
+          description: UUID of incident to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful operation
+        "404":
+          description: UUID not found
+    put:
+      tags:
+        - incidents
+      summary: Update incident by UUID
+      description: Updates an incident based on the UUID supplied
+      operationId: UpdateIncidentByUUID
+      parameters:
+        - name: uuid
+          in: path
+          description: UUID of incident to update
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful operation
+        "404":
+          description: UUID not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KeyValue"
+
+components:
+  schemas:
+    Key:
+      type: object
+      properties:
+        uuid:
+          type: string
+          example: "inc0001"
+    KeyValue:
+      type: object
+      required:
+        - id
+        - created_at
+        - date_time_of_incident
+        - type
+        - cause
+        - category
+        - description
+        - district
+        - ds_div
+        - gn_div
+        - latLng
+        - latLngAccuracy
+        - images
+        - video_url
+        - other_url
+        - reported_by
+        - field_office
+      properties:
+        id:
+          type: integer
+          example: "143"
+        created_at:
+          type: string
+          example: "2024-04-15 17:46:28+00"
+        date_time_of_incident:
+          type: string
+          example: "2024-04-15 17:46:28+00"
+        type:
+          type: string
+          example: Animal Death
+        cause:
+          type: string
+          example: Gunshot
+        category: 
+          type: string
+          example: Human-Elephant Conflict
+        description:
+          type: string
+          example: Incident description
+        district: 
+          type: string
+          example: Anuradhapura
+        ds_div:
+          type: string
+          example: Palagala
+        gn_div:
+          type: string
+          example: Palagala North
+        latLng:
+          type: object
+          example: {"lat":"8.460350270600822","lng":"81.0445266423473"}
+        latLngAccuracy:
+          type: string
+          example: Approximate
+        images:
+          type: object
+          example: [{"url":"https://firebasestorage.googleapis.com/v0/b/rethinkheclk.appspot.com/o/users%2F2nTdVHw8nmV56dC11ijV8GIyQth2%2Fuploads%2F1706117792677000_0.jpg?alt=media&token=4a8ddd6e-ac5a-419c-a2a1-f6a2c20f4adf"},{"url":"https://firebasestorage.googleapis.com/v0/b/rethinkheclk.appspot.com/o/users%2F2nTdVHw8nmV56dC11ijV8GIyQth2%2Fuploads%2F1706117792689000_1.jpg?alt=media&token=3963631c-43a1-4b28-a261-5825c4668b4e"}]
+        video_url:
+          type: string
+          example: https://www.facebook.com/hirunews/videos/712369614192563/
+        other_url:
+          type: string
+          example: https://www.facebook.com/hirunews/videos/712369614192563/
+        reported_by:
+          type: string
+          example: Nilaksha
+        field_office:
+          type: string
+          example: Anuradhapura
+    StringArray:
+      type: array
+      items:
+        type: string
